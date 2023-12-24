@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation</title>
+    <style>
+
+
+        *{
+            font-size: large;
+        }
+        .container{
+           background-color: rgb(206, 100, 100);
+           width: 300px;
+           margin-left: 500px;
+           padding: 2%;
+           font-weight: bold;
+
+        }
+
+        .container input{
+            display: flex;
+    
+        }
+        .error {
+            color: rgb(199, 176, 176);
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+    <form id="myForm" onsubmit="validateForm(); return false;">
+        <label for="namaPelanggan">Nama Pelanggan:</label>
+        <input type="text" id="namaPelanggan" required maxlength="30"><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required><br>
+
+        <label for="jamKeberangkatan">Jam Keberangkatan:</label>
+        <input type="text" id="jamKeberangkatan" required pattern="(?:[01]\d|2[0-3]):[0-5]\d"><br>
+
+        <label for="tujuanKeberangkatan">Tujuan Keberangkatan:</label>
+        <input type="text" id="tujuanKeberangkatan" required><br>
+
+        <label for="jumlahTiket">Jumlah Tiket:</label>
+        <input type="number" id="jumlahTiket" required min="1" max="10"><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        function validateForm() {
+            
+            resetErrors();
+
+            
+            var namaPelanggan = document.getElementById('namaPelanggan').value;
+            var email = document.getElementById('email').value;
+            var jamKeberangkatan = document.getElementById('jamKeberangkatan').value;
+            var tujuanKeberangkatan = document.getElementById('tujuanKeberangkatan').value;
+            var jumlahTiket = document.getElementById('jumlahTiket').value;
+
+            
+            var isValid = true;
+
+            if (namaPelanggan.length > 30) {
+                setError('namaPelanggan', 'Nama Pelanggan maksimum 30 karakter');
+                isValid = false;
+            }
+
+            if (!isValidEmail(email)) {
+                setError('email', 'Format email tidak valid');
+                isValid = false;
+            }
+
+            if (!isValidJamKeberangkatan(jamKeberangkatan)) {
+                setError('jamKeberangkatan', 'Format jam keberangkatan tidak valid');
+                isValid = false;
+            }
+
+            if (tujuanKeberangkatan.length === 0) {
+                setError('tujuanKeberangkatan', 'Tujuan Keberangkatan harus diisi');
+                isValid = false;
+            }
+
+            if (jumlahTiket < 1 || jumlahTiket > 10) {
+                setError('jumlahTiket', 'Jumlah Tiket harus antara 1 dan 10');
+                isValid = false;
+            }
+
+           
+            if (isValid) {
+                displayResult(namaPelanggan, email, jamKeberangkatan, tujuanKeberangkatan, jumlahTiket);
+            }
+        }
+
+        function isValidEmail(email) {
+            
+            var emailRegex = /\S+@\S+\.\S+/;
+            return emailRegex.test(email);
+        }
+
+        function isValidJamKeberangkatan(jamKeberangkatan) {
+            
+            var timeRegex = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
+            return timeRegex.test(jamKeberangkatan);
+        }
+
+        function setError(elementId, errorMessage) {
+            
+            var element = document.getElementById(elementId);
+            element.style.border = '1px solid red';
+
+            var errorElement = document.createElement('div');
+            errorElement.className = 'error';
+            errorElement.innerHTML = errorMessage;
+
+            element.parentNode.insertBefore(errorElement, element.nextSibling);
+        }
+
+        function resetErrors() {
+            
+            var inputs = document.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].style.border = '';
+            }
+
+            var errors = document.getElementsByClassName('error');
+            for (var i = 0; i < errors.length; i++) {
+                errors[i].remove();
+            }
+        }
+
+        function displayResult(namaPelanggan, email, jamKeberangkatan, tujuanKeberangkatan, jumlahTiket) {
+            
+            var resultElement = document.getElementById('result');
+            resultElement.innerHTML = `
+                <p><strong>Hasil:</strong></p>
+                <p>Nama Pelanggan: ${namaPelanggan}</p>
+                <p>Email: ${email}</p>
+                <p>Jam Keberangkatan: ${jamKeberangkatan}</p>
+                <p>Tujuan Keberangkatan: ${tujuanKeberangkatan}</p>
+                <p>Jumlah Tiket: ${jumlahTiket}</p>
+            `;
+        }
+    </script>
+    </div>
+</body>
+</html>
+``
